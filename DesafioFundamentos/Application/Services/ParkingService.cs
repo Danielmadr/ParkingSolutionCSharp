@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -18,14 +19,23 @@ namespace Application.Services
         {
             string placa = "";
             int anwser = 0;
+            bool test = false;
 
             do
             {
                 Console.WriteLine("Digite a placa do veículo para estacionar:");
                 placa = Console.ReadLine();
 
-                //Verifica se a placa segue o padrão 
-            } while (PlateValidator.IsValid(placa.ToUpper()) == false);
+                try
+                {
+                    test = PlateValidator.IsValid(placa.ToUpper());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+
+            } while (test == false);
 
 
             Console.WriteLine("Digite o tipo do veículo:\n  1-Carro\n  2-Moto");
@@ -33,7 +43,6 @@ namespace Application.Services
             {
                 Console.WriteLine("Opção inválida. Digite 1 para Carro ou 2 para Moto.");
                 int.TryParse(Console.ReadLine(), out anwser);
-                Console.WriteLine(anwser);
             }
 
             Vehicle newVehicle = new Vehicle(
@@ -50,7 +59,7 @@ namespace Application.Services
             Console.WriteLine("Digite a placa do veículo que deseja fazer checkout:");
             string placa = Console.ReadLine();
             string currentTime = "";
-            
+
             Vehicle foundVehicle = vehicleList.FirstOrDefault(x => x.Plate.ToUpper() == placa.ToUpper());
 
             if (foundVehicle != null)
@@ -74,8 +83,8 @@ namespace Application.Services
                 }
 
                 Decimal totalParkingCost = 0;
-                if (totalParkingHours  < 1)
-                {  
+                if (totalParkingHours < 1)
+                {
                     switch (foundVehicle.Type)
                     {
                         case VehicleType.Car:
@@ -85,7 +94,8 @@ namespace Application.Services
                             totalParkingCost = 3;
                             break;
                     }
-                }else
+                }
+                else
                 {
                     switch (foundVehicle.Type)
                     {
