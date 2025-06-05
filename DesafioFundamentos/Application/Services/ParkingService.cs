@@ -8,12 +8,26 @@ using System.Threading.Tasks;
 using Application.Validators;
 using DesafioFundamentos.Models.Entities;
 using DesafioFundamentos.Models.Enums;
+using DotNetEnv;
 
 namespace Application.Services
 {
     public class ParkingService
     {
         private List<Vehicle> vehicleList = new List<Vehicle>();
+        private decimal INITIAL_PRICE_CAR;
+        private decimal INITIAL_PRICE_MOTORCYCLE;
+        private decimal PRICE_PER_HOUR_FOR_CAR;
+        private decimal PRICE_PER_HOUR_FOR_MOTORCYCLE;
+
+        public ParkingService()
+        {
+            Env.Load();
+            INITIAL_PRICE_CAR = decimal.Parse(Environment.GetEnvironmentVariable("INITIAL_PRICE_CAR"));
+            INITIAL_PRICE_MOTORCYCLE = decimal.Parse(Environment.GetEnvironmentVariable("INITIAL_PRICE_MOTORCYCLE"));
+            PRICE_PER_HOUR_FOR_CAR = decimal.Parse(Environment.GetEnvironmentVariable("PRICE_PER_HOUR_CAR"));
+            PRICE_PER_HOUR_FOR_MOTORCYCLE = decimal.Parse(Environment.GetEnvironmentVariable("PRICE_PER_HOUR_MOTORCYCLE"));
+        }
 
         public void AdicionarVeiculo()
         {
@@ -56,6 +70,7 @@ namespace Application.Services
 
         public void RemoverVeiculo()
         {
+            ListarVeiculos();
             Console.WriteLine("Digite a placa do veículo que deseja fazer checkout:");
             string placa = Console.ReadLine();
             string currentTime = "";
@@ -88,10 +103,10 @@ namespace Application.Services
                     switch (foundVehicle.Type)
                     {
                         case VehicleType.Car:
-                            totalParkingCost = 5;
+                            totalParkingCost = INITIAL_PRICE_CAR;
                             break;
                         case VehicleType.Motorcycle:
-                            totalParkingCost = 3;
+                            totalParkingCost = INITIAL_PRICE_MOTORCYCLE;
                             break;
                     }
                 }
@@ -100,10 +115,10 @@ namespace Application.Services
                     switch (foundVehicle.Type)
                     {
                         case VehicleType.Car:
-                            totalParkingCost = 5 + (decimal)((totalParkingHours - 1) * 2);
+                            totalParkingCost = INITIAL_PRICE_CAR + decimal.Multiply((decimal)(totalParkingHours - 1), PRICE_PER_HOUR_FOR_CAR);
                             break;
                         case VehicleType.Motorcycle:
-                            totalParkingCost = 3 + (decimal)((totalParkingHours - 1) * 1.5);
+                            decimal.Multiply((decimal)(totalParkingHours - 1), PRICE_PER_HOUR_FOR_MOTORCYCLE);
                             break;
                     }
                 }
@@ -133,6 +148,13 @@ namespace Application.Services
             {
                 Console.WriteLine("Não há veículos estacionados.");
             }
+        }
+        
+        public void ConsultarPreços()
+        {
+            Console.WriteLine("Preços de estacionamento:");
+            Console.WriteLine($"Carro: R$ {INITIAL_PRICE_CAR} para a primeira hora, R$ {PRICE_PER_HOUR_FOR_CAR} por hora adicional.");
+            Console.WriteLine($"Moto: R$ {INITIAL_PRICE_MOTORCYCLE} para a primeira hora, R$ {PRICE_PER_HOUR_FOR_MOTORCYCLE} por hora adicional.");
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using Application.Services;
 using DesafioFundamentos.Models;
+using DotNetEnv;
 
 // Coloca o encoding para UTF8 para exibir acentuação
 Console.OutputEncoding = System.Text.Encoding.UTF8;
-
 
 Console.WriteLine("Seja bem vindo ao sistema de estacionamento!\n");
 
@@ -18,10 +18,11 @@ while (exibirMenu)
 {
     Console.Clear();
     Console.WriteLine("Digite a sua opção:");
-    Console.WriteLine("1 - Cadastrar veículo");
-    Console.WriteLine("2 - Remover veículo");
+    Console.WriteLine("1 - Entrada de veículo");
+    Console.WriteLine("2 - Saída de veículo");
     Console.WriteLine("3 - Listar veículos");
-    Console.WriteLine("4 - Encerrar");
+    Console.WriteLine("4 - Consultar preço por veículo");
+    Console.WriteLine("5 - Encerrar");
 
     switch (Console.ReadLine())
     {
@@ -38,6 +39,10 @@ while (exibirMenu)
             break;
 
         case "4":
+            es.ConsultarPreços();
+            break;   
+
+        case "5":
             exibirMenu = false;
             break;
 
