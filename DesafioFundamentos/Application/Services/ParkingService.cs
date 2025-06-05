@@ -52,11 +52,14 @@ namespace Application.Services
             } while (test == false);
 
 
-            Console.WriteLine("Digite o tipo do veículo:\n  1-Carro\n  2-Moto");
             while (anwser != 1 && anwser != 2)
             {
-                Console.WriteLine("Opção inválida. Digite 1 para Carro ou 2 para Moto.");
+                Console.WriteLine("Digite o tipo do veículo:\n  1-Carro\n  2-Moto");
                 int.TryParse(Console.ReadLine(), out anwser);
+                if (anwser != 1 && anwser != 2)
+                {
+                    Console.WriteLine("Opção inválida. Tente novamente.");
+                }
             }
 
             Vehicle newVehicle = new Vehicle(
@@ -118,7 +121,7 @@ namespace Application.Services
                             totalParkingCost = INITIAL_PRICE_CAR + decimal.Multiply((decimal)(totalParkingHours - 1), PRICE_PER_HOUR_FOR_CAR);
                             break;
                         case VehicleType.Motorcycle:
-                            decimal.Multiply((decimal)(totalParkingHours - 1), PRICE_PER_HOUR_FOR_MOTORCYCLE);
+                            totalParkingCost = INITIAL_PRICE_MOTORCYCLE + decimal.Multiply((decimal)(totalParkingHours - 1), PRICE_PER_HOUR_FOR_MOTORCYCLE);
                             break;
                     }
                 }
